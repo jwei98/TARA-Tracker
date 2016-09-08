@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7D2B34CC1D813022007DA156 /* ToDoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2B34CB1D813022007DA156 /* ToDoItem.swift */; };
+		7D2B34CE1D813393007DA156 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2B34CD1D813393007DA156 /* TableViewCell.swift */; };
 		7DD0BF151D6ECA3200FEE27A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD0BF141D6ECA3200FEE27A /* AppDelegate.swift */; };
 		7DD0BF171D6ECA3200FEE27A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD0BF161D6ECA3200FEE27A /* ViewController.swift */; };
 		7DD0BF1A1D6ECA3200FEE27A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7DD0BF181D6ECA3200FEE27A /* Main.storyboard */; };
@@ -34,6 +36,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7D2B34CB1D813022007DA156 /* ToDoItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoItem.swift; sourceTree = "<group>"; };
+		7D2B34CD1D813393007DA156 /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		7DD0BF111D6ECA3200FEE27A /* TARA Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TARA Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DD0BF141D6ECA3200FEE27A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7DD0BF161D6ECA3200FEE27A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -99,7 +103,9 @@
 			children = (
 				7DD0BF141D6ECA3200FEE27A /* AppDelegate.swift */,
 				7DD0BF161D6ECA3200FEE27A /* ViewController.swift */,
+				7D2B34CB1D813022007DA156 /* ToDoItem.swift */,
 				7DD0BF181D6ECA3200FEE27A /* Main.storyboard */,
+				7D2B34CD1D813393007DA156 /* TableViewCell.swift */,
 				7DD0BF1B1D6ECA3200FEE27A /* Assets.xcassets */,
 				7DD0BF1D1D6ECA3200FEE27A /* LaunchScreen.storyboard */,
 				7DD0BF201D6ECA3200FEE27A /* Info.plist */,
@@ -193,6 +199,7 @@
 				TargetAttributes = {
 					7DD0BF101D6ECA3200FEE27A = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = HTYUN7JS5L;
 					};
 					7DD0BF241D6ECA3200FEE27A = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -257,7 +264,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				7DD0BF171D6ECA3200FEE27A /* ViewController.swift in Sources */,
+				7D2B34CE1D813393007DA156 /* TableViewCell.swift in Sources */,
 				7DD0BF151D6ECA3200FEE27A /* AppDelegate.swift in Sources */,
+				7D2B34CC1D813022007DA156 /* ToDoItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -401,6 +410,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "TARA Tracker/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "UCSF.TARA-Tracker";
@@ -412,6 +422,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "TARA Tracker/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "UCSF.TARA-Tracker";
@@ -484,6 +495,7 @@
 				7DD0BF3B1D6ECA3200FEE27A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7DD0BF3C1D6ECA3200FEE27A /* Build configuration list for PBXNativeTarget "TARA TrackerTests" */ = {
 			isa = XCConfigurationList;
@@ -492,6 +504,7 @@
 				7DD0BF3E1D6ECA3200FEE27A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7DD0BF3F1D6ECA3200FEE27A /* Build configuration list for PBXNativeTarget "TARA TrackerUITests" */ = {
 			isa = XCConfigurationList;
@@ -500,6 +513,7 @@
 				7DD0BF411D6ECA3200FEE27A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
