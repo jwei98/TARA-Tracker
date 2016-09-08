@@ -16,6 +16,8 @@ class ToDoItem: NSObject {
     // A Boolean value that determines the completed state of this item.
     var completed: Bool
     
+    // Keeps a list of how many minutes logged and on what date
+    
     // Returns a ToDoItem initialized with the given text and default completed value.
     init(text: String) {
         self.text = text

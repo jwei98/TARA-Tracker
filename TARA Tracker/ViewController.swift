@@ -33,6 +33,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 
         let screenHeight = screenBound.size.height
         tableView.rowHeight = screenHeight / 5
+        print(tableView.rowHeight)
         
         if toDoItems.count > 0 {
             return
@@ -76,7 +77,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let item = toDoItems[indexPath.row]
         cell.textLabel?.text = item.text
         cell.textLabel?.textColor = UIColor.whiteColor()
-        
+        cell.textLabel?.font = UIFont.systemFontOfSize(tableView.rowHeight/6.7)
         cell.selectionStyle = .None
         
         cell.delegate = self
@@ -94,8 +95,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     // coloring the cells
     func colorForIndex(index: Int) -> UIColor {
         let itemCount = toDoItems.count - 1
-        let val = (CGFloat(index + 1) / CGFloat(itemCount)) * 0.5
-        return UIColor(red: 0.0, green: val, blue: 0.85, alpha: 1.0)
+        let val = (CGFloat(index+2) / CGFloat(itemCount)) * 0.5
+        return UIColor(red: 0.0, green: val, blue: 1.0, alpha: 1.0)
     }
     
     func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell,
@@ -105,16 +106,46 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 
     // view controller presenting alerts
     func presentAlert(taskName : String) {
-        // present alert
-        let alertController = UIAlertController(title: taskName, message:
-            "How many minutes?", preferredStyle: UIAlertControllerStyle.Alert)
-        alertController.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
-            textField.keyboardType = UIKeyboardType.NumberPad
+        // cases for logging minutes
+        if taskName == "Yoga Based Movement" || taskName == "Breathing" || taskName == "Meditation" {
+            let alertController = UIAlertController(title: taskName, message:
+                "How many minutes?", preferredStyle: UIAlertControllerStyle.Alert)
+            alertController.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
+                textField.keyboardType = UIKeyboardType.NumberPad
+            }
+            alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default,handler: nil))
+            alertController.addAction(UIAlertAction(title: "Submit", style: UIAlertActionStyle.Default,handler: nil))
+             self.presentViewController(alertController, animated: true, completion: nil)
         }
-        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
-        alertController.addAction(UIAlertAction(title: "Submit", style: UIAlertActionStyle.Default,handler: nil))
-        self.presentViewController(alertController, animated: true, completion: nil)
+        // case for Materials
+        else if taskName == "Materials" {
+            let alertController = UIAlertController(title: taskName, message:
+                "Visit materials page?", preferredStyle: UIAlertControllerStyle.Alert)
+            alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default,handler: nil))
+            alertController.addAction(UIAlertAction(title: "Go", style: UIAlertActionStyle.Default,handler: goToMaterials))
+             self.presentViewController(alertController, animated: true, completion: nil)
+        }
+        // case for Submit Minutes
+        else {
+            let alertController = UIAlertController(title: taskName, message:
+                "Enter Passcode:", preferredStyle: UIAlertControllerStyle.Alert)
+            alertController.addTextFieldWithConfigurationHandler { (textField) in
+                textField.placeholder = "Password"
+                textField.secureTextEntry = true
+            }
+            alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default,handler: nil))
+            alertController.addAction(UIAlertAction(title: "Submit", style: UIAlertActionStyle.Default,handler: nil))
+             self.presentViewController(alertController, animated: true, completion: nil)
+        }
+       
     }
+    
+    // alert handlers
+    let goToMaterials = { (action:UIAlertAction!) -> Void in
+        UIApplication.sharedApplication().openURL(NSURL(string: "https://www.dropbox.com/sh/ovff9450hnfeypq/AAAHbLIJt11x_rfWyTcu-Ehxa?dl=0")!)
+    }
+    
+    
     func turnBackgroundColor(color: UIColor) {
         tableView.backgroundColor = color
     }
