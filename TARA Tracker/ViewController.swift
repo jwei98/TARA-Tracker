@@ -8,13 +8,17 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, TableViewCellDelegate {
 
     // MARK: Properties
     @IBOutlet weak var tableView: UITableView!
     var toDoItems = [ToDoItem]()
     let screenBound = UIScreen.mainScreen().bounds
     
+    // hide status bar
+    override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,7 +28,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         tableView.registerClass(TableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.separatorStyle = .None
         tableView.backgroundColor = UIColor.grayColor()
-
+        tableView.alwaysBounceVertical = false
         
 
         let screenHeight = screenBound.size.height
@@ -41,6 +45,20 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     
+    
+    func toDoItemDeleted(toDoItem: ToDoItem) {
+        let index = (toDoItems as NSArray).indexOfObject(toDoItem)
+        if index == NSNotFound { return }
+        
+        // could removeAtIndex in the loop but keep it here for when indexOfObject works
+        toDoItems.removeAtIndex(index)
+        
+        // use the UITableView to animate the removal of this row
+        tableView.beginUpdates()
+        let indexPathForRow = NSIndexPath(forRow: index, inSection: 0)
+        tableView.deleteRowsAtIndexPaths([indexPathForRow], withRowAnimation: .Fade)
+        tableView.endUpdates()    
+    }
     
     // MARK: - Table view data source
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -61,6 +79,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         cell.selectionStyle = .None
         
+        cell.delegate = self
+        cell.toDoItem = item
+        
         return cell
     }
     
@@ -73,8 +94,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     // coloring the cells
     func colorForIndex(index: Int) -> UIColor {
         let itemCount = toDoItems.count - 1
-        let val = (CGFloat(index) / CGFloat(itemCount)) * 0.6
-        return UIColor(red: 0.0, green: val, blue: 0.8, alpha: 1.0)
+        let val = (CGFloat(index + 1) / CGFloat(itemCount)) * 0.5
+        return UIColor(red: 0.0, green: val, blue: 0.85, alpha: 1.0)
     }
     
     func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell,
@@ -82,7 +103,27 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         cell.backgroundColor = colorForIndex(indexPath.row)
     }
 
+    // view controller presenting alerts
+    func presentAlert(taskName : String) {
+        // present alert
+        let alertController = UIAlertController(title: taskName, message:
+            "How many minutes?", preferredStyle: UIAlertControllerStyle.Alert)
+        alertController.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
+            textField.keyboardType = UIKeyboardType.NumberPad
+        }
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
+        alertController.addAction(UIAlertAction(title: "Submit", style: UIAlertActionStyle.Default,handler: nil))
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
+    func turnBackgroundColor(color: UIColor) {
+        tableView.backgroundColor = color
+    }
     
-    
+    override func canBecomeFirstResponder() -> Bool {
+        return true
+    }
+    override func canResignFirstResponder() -> Bool {
+        return true
+    }
 }
 

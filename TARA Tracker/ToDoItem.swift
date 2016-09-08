@@ -22,4 +22,7 @@ class ToDoItem: NSObject {
         self.completed = false
     }
     
+    func getText() -> String {
+        return self.text
+    }
 }

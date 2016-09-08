@@ -9,11 +9,24 @@
 import UIKit
 import QuartzCore
 
+// A protocol that the TableViewCell uses to inform its delegate of state change
+protocol TableViewCellDelegate {
+    // indicates that the given item has been deleted
+    func toDoItemDeleted(todoItem: ToDoItem)
+    func presentAlert(taskName : String)
+    func turnBackgroundColor(col : UIColor)
+}
+
 class TableViewCell: UITableViewCell {
     
     let gradientLayer = CAGradientLayer()
     var originalCenter = CGPoint()
     var deleteOnDragRelease = false
+    // The object that acts as delegate for this cell.
+    var delegate: TableViewCellDelegate?
+    // The item that this cell renders.
+    var toDoItem: ToDoItem?
+    
     
     required init(coder aDecoder: NSCoder) {
         fatalError("NSCoding not supported")
@@ -44,9 +57,15 @@ class TableViewCell: UITableViewCell {
         // 2
         if recognizer.state == .Changed {
             let translation = recognizer.translationInView(self)
-            center = CGPointMake(originalCenter.x + translation.x, originalCenter.y)
+            center = CGPointMake(originalCenter.x + translation.x/1.5, originalCenter.y)
             // has the user dragged the item far enough to initiate a delete/complete?
-            deleteOnDragRelease = frame.origin.x < -frame.size.width / 2.0
+            deleteOnDragRelease = frame.origin.x < -frame.size.width / 3.0
+            if deleteOnDragRelease {
+                delegate!.turnBackgroundColor(UIColor.greenColor())
+            }
+            else {
+                delegate!.turnBackgroundColor(UIColor.grayColor())
+            }
         }
         // 3
         if recognizer.state == .Ended {
@@ -57,8 +76,16 @@ class TableViewCell: UITableViewCell {
                 // if the item is not being deleted, snap back to the original location
                 UIView.animateWithDuration(0.2, animations: {self.frame = originalFrame})
             }
+            if deleteOnDragRelease {
+                if delegate != nil && toDoItem != nil {
+                    UIView.animateWithDuration(0.2, animations: {self.frame = originalFrame})
+                    delegate!.turnBackgroundColor(UIColor.grayColor())
+                    delegate!.presentAlert((self.toDoItem?.getText())!)
+                }
+            }
         }
     }
+    
     override func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
         if let panGestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer {
             let translation = panGestureRecognizer.translationInView(superview!)
@@ -69,5 +96,6 @@ class TableViewCell: UITableViewCell {
         }
         return false
     }
+
     
 }
