@@ -61,7 +61,7 @@ class TableViewCell: UITableViewCell {
             // has the user dragged the item far enough to initiate a delete/complete?
             deleteOnDragRelease = frame.origin.x < -frame.size.width / 3.0
             if deleteOnDragRelease {
-                let greenColor = UIColor(red: 0, green: 255, blue: 0, alpha: 0.75)
+                let greenColor = UIColor(red: 0.4, green: 1.0, blue: 0.4, alpha: 0.9)
                 delegate!.turnBackgroundColor(greenColor)
             }
             else {

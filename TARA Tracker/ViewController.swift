@@ -131,11 +131,21 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 "Enter Passcode:", preferredStyle: UIAlertControllerStyle.alert)
             alertController.addTextField { (textField) in
                 textField.placeholder = "Password"
-                textField.isSecureTextEntry = true
+                textField.isSecureTextEntry = false
             }
             alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default,handler: nil))
-            alertController.addAction(UIAlertAction(title: "Submit", style: UIAlertActionStyle.default,handler: nil))
-             self.present(alertController, animated: true, completion: nil)
+            alertController.addAction(UIAlertAction(title: "Submit", style: UIAlertActionStyle.default,handler: { (_) in
+                    // password validation
+                    let textField = alertController.textFields![0]
+                    if textField.text == "taratracker" {
+                        print("That is the correct password!")
+                    }
+                    else {
+                        print("Incorrect. You entered: \(textField.text)")
+                        // *** SEND DATA *** //
+                    }
+            }))
+            self.present(alertController, animated: true, completion: nil)
         }
        
     }
@@ -150,6 +160,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         tableView.backgroundColor = color
     }
     
+    // for performance/efficiency
     override var canBecomeFirstResponder : Bool {
         return true
     }
