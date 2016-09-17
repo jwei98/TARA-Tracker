@@ -193,7 +193,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     // alert handlers
     func logActivity(tName : String, time : Int) {
         print(minutesLog)
-        
+
         // handles a new log (including first ever log)
         if (currentDate != previousDate || currentMonth != previousMonth || minutesLog == []) {
             // add current date to log
@@ -237,6 +237,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             }
             minutesLog[minutesLog.endIndex-subtractIndex] = minutesLog[minutesLog.endIndex-subtractIndex] + time
         }
+ 
         print(minutesLog)
         memory.set(minutesLog, forKey: "minutesLog")
         
