@@ -23,6 +23,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     var currentDate : Int = 0
     
     var minutesLog = [Int]()
+    var listOfCells = [TableViewCell]()
+    var listOfCheckmarks : [Bool] = [false,false,false]
+    
     
     // hide status bar
     override var prefersStatusBarHidden : Bool {
@@ -41,12 +44,23 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             minutesLog = temp
         }
         
+        
         // get current date
         let date = NSDate()
         let calendar = NSCalendar.current
         let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date as Date)
         currentMonth = components.month!
         currentDate = components.day!
+        
+        // modifications based on currentDate vs. pastDate
+        if currentMonth != previousMonth || currentDate != previousDate {
+            // remove all checkmarks
+            listOfCheckmarks = [false, false, false]
+            memory.set(listOfCheckmarks, forKey: "listOfCheckmarks")
+        }
+        if let temp = memory.array(forKey: "listOfCheckmarks") as? [Bool] {
+            listOfCheckmarks = temp
+        }
         
         
         // tableView setup
@@ -106,6 +120,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         cell.delegate = self
         cell.toDoItem = item
         
+        listOfCells.append(cell)
+        print(listOfCheckmarks)
+        if indexPath.row < 3 && listOfCheckmarks[indexPath.row] {
+            addCheckmark(row: indexPath.row)
+        }
         return cell
     }
     
@@ -143,13 +162,15 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                     let userInputAsInt = Int(textField.text!)
                     if (userInputAsInt != nil){
                         self.logActivity(tName: taskName, time: userInputAsInt!)
+                        // add checkmark
+                        switch taskName {
+                            case "Yoga Based Movement": self.addCheckmark(row: 0)
+                            case "Breathing": self.addCheckmark(row: 1)
+                            case "Meditation": self.addCheckmark(row: 2)
+                            default: break
+                        }
+                        
                     }
-                    else {
-                        print("Not an integer")
-                    }
-                }
-                else {
-                    print("Not an integer")
                 }
                 }
             
@@ -177,12 +198,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                     // password validation
                     let textField = alertController.textFields![0]
                     if textField.text == "taratracker" {
-                        print("That is the correct password!")
                         self.sendData()
-                    }
-                    else {
-                        print("Incorrect. You entered: \(textField.text)")
-                        // *** SEND DATA *** //
                     }
             }))
             self.present(alertController, animated: true, completion: nil)
@@ -194,8 +210,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     // alert handlers
     func logActivity(tName : String, time : Int) {
-        print(minutesLog)
-
         // handles a new log (including first ever log)
         if (currentDate != previousDate || currentMonth != previousMonth || minutesLog == []) {
             // add current date to log
@@ -238,9 +252,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 subtractIndex = 1
             }
             minutesLog[minutesLog.endIndex-subtractIndex] = minutesLog[minutesLog.endIndex-subtractIndex] + time
+
         }
  
-        print(minutesLog)
         memory.set(minutesLog, forKey: "minutesLog")
         
     }
@@ -293,6 +307,17 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     override var canResignFirstResponder : Bool {
         return true
+    }
+    
+    func addCheckmark(row : Int) {
+        let cell = listOfCells[row]
+        
+        cell.accessoryType = .checkmark
+        cell.tintColor = UIColor.white
+        
+        // add to list of checked cells
+        listOfCheckmarks[row] = true
+        memory.set(listOfCheckmarks, forKey: "listOfCheckmarks")
     }
         
     
