@@ -8,6 +8,7 @@
 
 import UIKit
 import MessageUI
+import UserNotifications
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, TableViewCellDelegate, MFMailComposeViewControllerDelegate {
 
@@ -22,11 +23,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     var currentMonth : Int = 0
     var currentDate : Int = 0
     
-    var minutesLog = [Int]()
+    var minutesLog = [Int]() // in format: [Month, Date, YBM, Breathing, Meditation,... repeat]
+    var totalMinutesLog = [0,0,0] // in format: [YBM, Breathing, Meditation]
     var listOfCells = [TableViewCell]()
     var listOfCheckmarks : [Bool] = [false,false,false]
-    
-    
+        
     // hide status bar
     override var prefersStatusBarHidden : Bool {
         return true
@@ -44,6 +45,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             minutesLog = temp
         }
         
+        if let temp = memory.array(forKey: "totalMinutesLog") as? [Int] {
+            totalMinutesLog = temp
+        }
         
         // get current date
         let date = NSDate()
@@ -121,9 +125,13 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         cell.toDoItem = item
         
         listOfCells.append(cell)
-        print(listOfCheckmarks)
         if indexPath.row < 3 && listOfCheckmarks[indexPath.row] {
             addCheckmark(row: indexPath.row)
+        }
+        
+        // add totalMinutesLabel
+        if indexPath.row < 3 {
+            cell.addTotalMinutesLabel(txt: String(totalMinutesLog[indexPath.row]))
         }
         return cell
     }
@@ -221,22 +229,31 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             previousMonth = currentMonth
             previousDate = currentDate
             
+            var index = 0
+
             // log minutes
             if tName == "Yoga Based Movement" {
                 minutesLog.append(time)
                 minutesLog.append(0)
                 minutesLog.append(0)
+                index = 0
             }
             else if tName == "Breathing" {
                 minutesLog.append(0)
                 minutesLog.append(time)
                 minutesLog.append(0)
+                index = 1
             }
             else {
                 minutesLog.append(0)
                 minutesLog.append(0)
                 minutesLog.append(time)
+                index = 2
             }
+            // change totalMinutes and update label
+            totalMinutesLog[index] += time
+            self.listOfCells[index].addTotalMinutesLabel(txt: String(self.totalMinutesLog[index]))
+        
         }
             
         // if it's the same day as the last time the user logged...
@@ -251,11 +268,14 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             else {
                 subtractIndex = 1
             }
+            totalMinutesLog[3-subtractIndex] += time
             minutesLog[minutesLog.endIndex-subtractIndex] = minutesLog[minutesLog.endIndex-subtractIndex] + time
-
+            self.listOfCells[3-subtractIndex].addTotalMinutesLabel(txt: String(self.totalMinutesLog[3-subtractIndex]))
+            
         }
- 
+        memory.set(totalMinutesLog, forKey: "totalMinutesLog")
         memory.set(minutesLog, forKey: "minutesLog")
+
         
     }
     
@@ -319,7 +339,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         listOfCheckmarks[row] = true
         memory.set(listOfCheckmarks, forKey: "listOfCheckmarks")
     }
-        
+
     
 }
 

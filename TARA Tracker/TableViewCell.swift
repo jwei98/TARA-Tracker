@@ -65,7 +65,7 @@ class TableViewCell: UITableViewCell {
                 delegate!.turnBackgroundColor(greenColor)
             }
             else {
-                delegate!.turnBackgroundColor(UIColor.gray)
+                delegate!.turnBackgroundColor(UIColor.lightGray)
             }
         }
         // 3
@@ -80,7 +80,7 @@ class TableViewCell: UITableViewCell {
             if deleteOnDragRelease {
                 if delegate != nil && toDoItem != nil {
                     UIView.animate(withDuration: 0.2, animations: {self.frame = originalFrame})
-                    delegate!.turnBackgroundColor(UIColor.gray)
+                    delegate!.turnBackgroundColor(UIColor.lightGray)
                     delegate!.presentAlert((self.toDoItem?.getText())!)
                 }
             }
@@ -96,6 +96,28 @@ class TableViewCell: UITableViewCell {
             return false
         }
         return false
+    }
+    
+    func addTotalMinutesLabel(txt: String) {
+        
+        if let checkLabel = self.viewWithTag(1) {
+            checkLabel.removeFromSuperview()
+        }
+        
+        // add totalMinute numers to background
+        let xPos = -self.frame.width / 6
+        let yPos = self.frame.height / 2
+        print(xPos)
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.width / 6, height: 15))
+        print(self.frame.width/6)
+        label.tag = 1
+        label.center = CGPoint(x: xPos, y: yPos)
+        label.text = txt
+        label.textColor = UIColor.white
+        
+        self.addSubview(label)
+
+        
     }
 
     
