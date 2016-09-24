@@ -101,7 +101,8 @@ class TableViewCell: UITableViewCell {
     func addTotalMinutesLabel(txt: String) {
         
         if let checkLabel = self.viewWithTag(1) {
-            checkLabel.removeFromSuperview()
+            let label = checkLabel as! UILabel
+            label.text = txt
         }
         
         // add totalMinute numers to background
