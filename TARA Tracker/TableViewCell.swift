@@ -11,14 +11,16 @@ import QuartzCore
 
 // A protocol that the TableViewCell uses to inform its delegate of state change
 protocol TableViewCellDelegate {
-    // indicates that the given item has been deleted
-    func toDoItemDeleted(_ todoItem: ToDoItem)
     func presentAlert(_ taskName : String)
     func turnBackgroundColor(_ col : UIColor)
 }
 
+
+
 class TableViewCell: UITableViewCell {
     
+    // MARK: ---------------------------------- Properties, Constructor, Initial Setup ---------------------------------- //
+
     let gradientLayer = CAGradientLayer()
     var originalCenter = CGPoint()
     var deleteOnDragRelease = false
@@ -47,7 +49,8 @@ class TableViewCell: UITableViewCell {
         gradientLayer.frame = bounds
     }
     
-    //MARK: - horizontal pan gesture methods
+    // MARK: ---------------------------------- Horizontal Panning (Swiping) ---------------------------------- //
+
     func handlePan(_ recognizer: UIPanGestureRecognizer) {
         // 1
         if recognizer.state == .began {
@@ -98,7 +101,10 @@ class TableViewCell: UITableViewCell {
         return false
     }
     
-    // labels
+
+    
+    // MARK: ---------------------------------- Mutators (Specifically labels) ---------------------------------- //
+
     func addTotalMinutesLabel(txt: String) {
         
         if let checkLabel = self.viewWithTag(1) {

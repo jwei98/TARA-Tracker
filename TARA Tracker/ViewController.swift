@@ -6,18 +6,26 @@
 //  Copyright © 2016 Justin Wei. All rights reserved.
 //
 
+// MARK: Description & Sources
+// Description: This app was built by Justin Wei in order to help collect information from subjects in the University of California, San Francisco "Brain Change" study. Subjects can use this app to track the amount of time they spend doing YBM, Breathing, and Meditating at home. Furthermore, they can use the UI to access course/study materials (password protected). Finally, at the end of the program, they will be given the password to submit their minute-logs via email to Olga Tymofiyeva, co-head of the study. Please contact justin.lj.wei@gmail.com for more information.
+
+// Sources: TableView and swipe methods were highly based off Ray Wenderlich's "How To Make a Gesture-Driven To-Do List App" tutorial. Fonts used were: "Aliens and Cows" by Francesco Canovaro (downloaded from DaFont.com) and "Steelfish Font" by Typodermic Fonts (also downloaded from DaFont.com).
+
+
 import UIKit
 import MessageUI
 import UserNotifications
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, TableViewCellDelegate, MFMailComposeViewControllerDelegate {
 
-    // MARK: Properties
+    // MARK: ---------------------------------- Properties and Initial Setup ---------------------------------- //
+    
     @IBOutlet weak var tableView: UITableView!
     var toDoItems = [ToDoItem]()
     let screenBound = UIScreen.main.bounds
     let memory = UserDefaults.standard
 
+    // these properties are used to add dates into the minute log & reset features (like checkmarks) daily
     var previousMonth : Int = 0
     var previousDate : Int = 0
     var currentMonth : Int = 0
@@ -25,32 +33,17 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     var minutesLog = [Int]() // in format: [Month, Date, YBM, Breathing, Meditation,... repeat]
     var totalMinutesLog = [0,0,0] // in format: [YBM, Breathing, Meditation]
-    var listOfCells = [TableViewCell]()
-    var listOfCheckmarks : [Bool] = [false,false,false]
-    let listActionNames = ["Log", "Log", "Log", "Go", "Send"]
+    var listOfCells = [TableViewCell]() // used to access individual cells
+    var listOfCheckmarks : [Bool] = [false,false,false] // marks which activities have been completed daily
+    let listActionNames = ["LOG", "LOG", "LOG", "VISIT", "SEND"] // labels that show on right side of cells (when user swipes)
     
-    var materialsPasswordEntered = false
+    var materialsPasswordEntered = false // user only has to login once to access materials
     
-    // hide status bar
-    override var prefersStatusBarHidden : Bool {
-        return true
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        for family: String in UIFont.familyNames
-        {
-            print("\(family)")
-            for names: String in UIFont.fontNames(forFamilyName: family)
-            {
-                print("== \(names)")
-            }
-        }
-        
-        
         // LOADING PAST DATA
-        // get last date logged and store in previousMonth & previousDate
         previousMonth = memory.integer(forKey: "previousMonth")
         previousDate = memory.integer(forKey: "previousDate")
         // get stored minutesLog
@@ -69,7 +62,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         currentMonth = components.month!
         currentDate = components.day!
         
-        // modifications based on currentDate vs. pastDate
+        // modifications to app based on currentDate vs. pastDate
         if currentMonth != previousMonth || currentDate != previousDate {
             // remove all checkmarks
             listOfCheckmarks = [false, false, false]
@@ -90,7 +83,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         tableView.alwaysBounceVertical = false
         let screenHeight = screenBound.size.height
         tableView.rowHeight = screenHeight / 5
-        
+        // add tasks to tableView
         toDoItems.append(ToDoItem(text: "Yoga Based Movement"))
         toDoItems.append(ToDoItem(text: "Breathing"))
         toDoItems.append(ToDoItem(text: "Meditation"))
@@ -99,23 +92,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 
     }
     
+    // MARK: ---------------------------------- TableView Setup and Methods ---------------------------------- //
+
     
-    
-    func toDoItemDeleted(_ toDoItem: ToDoItem) {
-        let index = (toDoItems as NSArray).index(of: toDoItem)
-        if index == NSNotFound { return }
-        
-        // could removeAtIndex in the loop but keep it here for when indexOfObject works
-        toDoItems.remove(at: index)
-        
-        // use the UITableView to animate the removal of this row
-        tableView.beginUpdates()
-        let indexPathForRow = IndexPath(row: index, section: 0)
-        tableView.deleteRows(at: [indexPathForRow], with: .fade)
-        tableView.endUpdates()    
-    }
-    
-    // MARK: - Table view data source
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -124,6 +103,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         return toDoItems.count
     }
     
+    // setup of individual cells
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell",
@@ -170,7 +150,18 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         cell.backgroundColor = colorForIndex((indexPath as NSIndexPath).row)
     }
 
-    // ---------------------------------- Presenting Alerts to User ---------------------------------- //
+    func addCheckmark(row : Int) {
+        let cell = listOfCells[row]
+        
+        cell.accessoryType = .checkmark
+        cell.tintColor = UIColor.white
+        
+        // add to list of checked cells
+        listOfCheckmarks[row] = true
+        memory.set(listOfCheckmarks, forKey: "listOfCheckmarks")
+    }
+    
+    // MARK: ---------------------------------- Presenting Alerts to User ---------------------------------- //
     
     // view controller presenting alerts
     func presentAlert(_ taskName : String) {
@@ -219,7 +210,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 let alertController = UIAlertController(title: taskName, message:
                     "Visit materials page?", preferredStyle: UIAlertControllerStyle.alert)
                 alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default,handler: nil))
-                alertController.addAction(UIAlertAction(title: "Visit", style: UIAlertActionStyle.default,handler: self.goToMaterials))
+                alertController.addAction(UIAlertAction(title: "Go", style: UIAlertActionStyle.default,handler: self.goToMaterials))
                 self.present(alertController, animated: true, completion: nil)
             }
             // user has not accessed materials before
@@ -269,6 +260,30 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
        
     }
     
+    // alert helper functions
+    func presentMaterialsAlert() {
+        self.memory.set(true, forKey: "materialsPasswordEntered")
+        self.materialsPasswordEntered = true
+        let alertController = UIAlertController(title: "Materials", message:
+            "Visit materials page?", preferredStyle: UIAlertControllerStyle.alert)
+        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default,handler: nil))
+        alertController.addAction(UIAlertAction(title: "Go", style: UIAlertActionStyle.default,handler: self.goToMaterials))
+        self.present(alertController, animated: true, completion: nil)
+    }
+    func presentWrongPasswordAlert(name : String) {
+        let alertController = UIAlertController(title: name, message:
+            "Oops! You entered an incorrect password.", preferredStyle: UIAlertControllerStyle.alert)
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default,handler: nil))
+        self.present(alertController, animated: true, completion: nil)
+    }
+    func presentInvalidInputAlert(name : String) {
+        let alertController = UIAlertController(title: name, message:
+            "Sorry! You may only enter integer times between 1-120 minutes.", preferredStyle: UIAlertControllerStyle.alert)
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default,handler: nil))
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    // MARK: ---------------------------------- Alert Handlers & Logging Activities ---------------------------------- //
     
     
     // alert handlers
@@ -338,10 +353,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         UIApplication.shared.openURL(URL(string: "https://www.dropbox.com/sh/ovff9450hnfeypq/AAAHbLIJt11x_rfWyTcu-Ehxa?dl=0")!)
     }
     
-    func turnBackgroundColor(_ color: UIColor) {
-        tableView.backgroundColor = color
-    }
     
+    
+    // MARK: ---------------------------------- Submitting Data through Email ---------------------------------- //
+
     // sending email with data
     func sendData() {
         let mailComposeViewController = configuredMailComposeViewController()
@@ -356,7 +371,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let mailComposerVC = MFMailComposeViewController()
         mailComposerVC.mailComposeDelegate = self // Extremely important to set the --mailComposeDelegate-- property, NOT the --delegate-- property
         
-        mailComposerVC.setToRecipients(["justin.lj.wei@gmail.com"])
+        mailComposerVC.setToRecipients(["Olga.Tymofiyeva@ucsf.edu"])
         mailComposerVC.setSubject("TARA Minutes: Subject X")
         let minutesString = String(describing: minutesLog)
         mailComposerVC.setMessageBody(minutesString, isHTML: false)
@@ -376,46 +391,23 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         controller.dismiss(animated: true, completion: nil)
     }
     
-    // alerts
-    func presentMaterialsAlert() {
-        self.memory.set(true, forKey: "materialsPasswordEntered")
-        self.materialsPasswordEntered = true
-        let alertController = UIAlertController(title: "Materials", message:
-            "Visit materials page?", preferredStyle: UIAlertControllerStyle.alert)
-        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default,handler: nil))
-        alertController.addAction(UIAlertAction(title: "Go", style: UIAlertActionStyle.default,handler: self.goToMaterials))
-        self.present(alertController, animated: true, completion: nil)
-    }
-    func presentWrongPasswordAlert(name : String) {
-        let alertController = UIAlertController(title: name, message:
-            "You entered an incorrect password.", preferredStyle: UIAlertControllerStyle.alert)
-        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default,handler: nil))
-        self.present(alertController, animated: true, completion: nil)
-    }
-    func presentInvalidInputAlert(name : String) {
-        let alertController = UIAlertController(title: name, message:
-            "Oops! You may only enter times between 1-120 minutes.", preferredStyle: UIAlertControllerStyle.alert)
-        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default,handler: nil))
-        self.present(alertController, animated: true, completion: nil)
-    }
     
+    // MARK: ---------------------------------- Helper Functions ---------------------------------- //
+    
+    
+    // hide status bar
+    override var prefersStatusBarHidden : Bool {
+        return true
+    }
+    func turnBackgroundColor(_ color: UIColor) {
+        tableView.backgroundColor = color
+    }
     // for performance/efficiency
     override var canBecomeFirstResponder : Bool {
         return true
     }
     override var canResignFirstResponder : Bool {
         return true
-    }
-    
-    func addCheckmark(row : Int) {
-        let cell = listOfCells[row]
-        
-        cell.accessoryType = .checkmark
-        cell.tintColor = UIColor.white
-        
-        // add to list of checked cells
-        listOfCheckmarks[row] = true
-        memory.set(listOfCheckmarks, forKey: "listOfCheckmarks")
     }
 
     

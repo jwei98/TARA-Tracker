@@ -16,13 +16,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        // Implement local notifications that repeat at 7 PM every day
         let notificationSettings = UIUserNotificationSettings(types: [.alert, .sound], categories: nil)
         UIApplication.shared.registerUserNotificationSettings(notificationSettings)
         self.createLocalNotification()
         return true
     }
     
+    // creation of local notification
     func createLocalNotification() {
         let dateComp:NSDateComponents = NSDateComponents()
         dateComp.year = 2016;
