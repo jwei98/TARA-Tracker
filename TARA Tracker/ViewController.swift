@@ -27,7 +27,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     var totalMinutesLog = [0,0,0] // in format: [YBM, Breathing, Meditation]
     var listOfCells = [TableViewCell]()
     var listOfCheckmarks : [Bool] = [false,false,false]
-        
+    let listActionNames = ["Log", "Log", "Log", "Go", "Send"]
+    
     // hide status bar
     override var prefersStatusBarHidden : Bool {
         return true
@@ -35,6 +36,16 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        for family: String in UIFont.familyNames
+        {
+            print("\(family)")
+            for names: String in UIFont.fontNames(forFamilyName: family)
+            {
+                print("== \(names)")
+            }
+        }
+        
         
         // LOADING PAST DATA
         // get last date logged and store in previousMonth & previousDate
@@ -117,8 +128,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                                                                for: indexPath) as! TableViewCell
         let item = toDoItems[(indexPath as NSIndexPath).row]
         cell.textLabel?.text = item.text
+        cell.textLabel?.font = UIFont(name: "Ailerons-Regular", size: tableView.rowHeight/5.1)
         cell.textLabel?.textColor = UIColor.white
-        cell.textLabel?.font = UIFont.systemFont(ofSize: tableView.rowHeight/6.7)
         cell.selectionStyle = .none
         
         cell.delegate = self
@@ -133,6 +144,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         if indexPath.row < 3 {
             cell.addTotalMinutesLabel(txt: String(totalMinutesLog[indexPath.row]))
         }
+        
+        cell.addActionLabel(txt: self.listActionNames[indexPath.row])
+        
         return cell
     }
     

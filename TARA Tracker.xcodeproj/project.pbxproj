@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		7D2B34CC1D813022007DA156 /* ToDoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2B34CB1D813022007DA156 /* ToDoItem.swift */; };
 		7D2B34CE1D813393007DA156 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2B34CD1D813393007DA156 /* TableViewCell.swift */; };
+		7D64D4001D95FF5A008129F0 /* Ailerons-Typeface.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7D64D3FF1D95FF5A008129F0 /* Ailerons-Typeface.otf */; };
+		7D64D4021D960556008129F0 /* aqua.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7D64D4011D960556008129F0 /* aqua.ttf */; };
+		7D64D4041D96068F008129F0 /* Modeka-2015-12-08.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7D64D4031D96068F008129F0 /* Modeka-2015-12-08.otf */; };
 		7DD0BF151D6ECA3200FEE27A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD0BF141D6ECA3200FEE27A /* AppDelegate.swift */; };
 		7DD0BF171D6ECA3200FEE27A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD0BF161D6ECA3200FEE27A /* ViewController.swift */; };
 		7DD0BF1A1D6ECA3200FEE27A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7DD0BF181D6ECA3200FEE27A /* Main.storyboard */; };
@@ -38,6 +41,9 @@
 /* Begin PBXFileReference section */
 		7D2B34CB1D813022007DA156 /* ToDoItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoItem.swift; sourceTree = "<group>"; };
 		7D2B34CD1D813393007DA156 /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		7D64D3FF1D95FF5A008129F0 /* Ailerons-Typeface.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Ailerons-Typeface.otf"; sourceTree = "<group>"; };
+		7D64D4011D960556008129F0 /* aqua.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = aqua.ttf; sourceTree = "<group>"; };
+		7D64D4031D96068F008129F0 /* Modeka-2015-12-08.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Modeka-2015-12-08.otf"; sourceTree = "<group>"; };
 		7DD0BF111D6ECA3200FEE27A /* TARA Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TARA Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DD0BF141D6ECA3200FEE27A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7DD0BF161D6ECA3200FEE27A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -78,6 +84,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7D64D3FE1D95FF2A008129F0 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				7D64D4011D960556008129F0 /* aqua.ttf */,
+				7D64D4031D96068F008129F0 /* Modeka-2015-12-08.otf */,
+				7D64D3FF1D95FF5A008129F0 /* Ailerons-Typeface.otf */,
+			);
+			name = Fonts;
+			sourceTree = "<group>";
+		};
 		7DD0BF081D6ECA3200FEE27A = {
 			isa = PBXGroup;
 			children = (
@@ -106,6 +122,7 @@
 				7D2B34CB1D813022007DA156 /* ToDoItem.swift */,
 				7DD0BF181D6ECA3200FEE27A /* Main.storyboard */,
 				7D2B34CD1D813393007DA156 /* TableViewCell.swift */,
+				7D64D3FE1D95FF2A008129F0 /* Fonts */,
 				7DD0BF1B1D6ECA3200FEE27A /* Assets.xcassets */,
 				7DD0BF1D1D6ECA3200FEE27A /* LaunchScreen.storyboard */,
 				7DD0BF201D6ECA3200FEE27A /* Info.plist */,
@@ -239,9 +256,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D64D4021D960556008129F0 /* aqua.ttf in Resources */,
+				7D64D4041D96068F008129F0 /* Modeka-2015-12-08.otf in Resources */,
 				7DD0BF1F1D6ECA3200FEE27A /* LaunchScreen.storyboard in Resources */,
 				7DD0BF1C1D6ECA3200FEE27A /* Assets.xcassets in Resources */,
 				7DD0BF1A1D6ECA3200FEE27A /* Main.storyboard in Resources */,
+				7D64D4001D95FF5A008129F0 /* Ailerons-Typeface.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

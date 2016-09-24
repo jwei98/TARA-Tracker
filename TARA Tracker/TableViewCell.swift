@@ -98,6 +98,7 @@ class TableViewCell: UITableViewCell {
         return false
     }
     
+    // labels
     func addTotalMinutesLabel(txt: String) {
         
         if let checkLabel = self.viewWithTag(1) {
@@ -109,17 +110,45 @@ class TableViewCell: UITableViewCell {
         let xPos = -self.frame.width / 6
         let yPos = self.frame.height / 2
         print(xPos)
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.width / 6, height: 15))
-        print(self.frame.width/6)
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.width / 6, height: self.frame.height))
+        print(self.frame.width / 6)
+        label.font = UIFont(name: "Ailerons-Regular", size: self.frame.height/6)
+        print(self.frame.height/8)
         label.tag = 1
         label.center = CGPoint(x: xPos, y: yPos)
         label.text = txt
         label.textColor = UIColor.white
         
         self.addSubview(label)
-
         
     }
+    
+    
+    func addActionLabel(txt: String) {
+        
+        if let checkLabel = self.viewWithTag(2) {
+            let label = checkLabel as! UILabel
+            label.text = txt
+        }
+        
+        // add totalMinute numers to background
+        let xPos = self.frame.width * (9/7)
+        let yPos = self.frame.height * (1/2)
+        print(xPos)
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.width / 6, height: self.frame.height))
+        print(self.frame.width / 6)
+        label.font = UIFont(name: "Ailerons-Regular", size: self.frame.height/6)
+        print(self.frame.height/8)
+        label.tag = 2
+        label.center = CGPoint(x: xPos, y: yPos)
+        label.text = txt
+        label.textColor = UIColor.white
+        
+        self.addSubview(label)
+        
+    }
+    
+    
 
     
 }
