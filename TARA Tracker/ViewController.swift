@@ -16,6 +16,7 @@ import UIKit
 import MessageUI
 import UserNotifications
 
+
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, TableViewCellDelegate, MFMailComposeViewControllerDelegate {
 
     // MARK: ---------------------------------- Properties and Initial Setup ---------------------------------- //
