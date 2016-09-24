@@ -29,6 +29,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     var listOfCheckmarks : [Bool] = [false,false,false]
     let listActionNames = ["Log", "Log", "Log", "Go", "Send"]
     
+    var materialsPasswordEntered = false
+    
     // hide status bar
     override var prefersStatusBarHidden : Bool {
         return true
@@ -55,10 +57,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         if let temp = memory.array(forKey: "minutesLog") as? [Int] {
             minutesLog = temp
         }
-        
         if let temp = memory.array(forKey: "totalMinutesLog") as? [Int] {
             totalMinutesLog = temp
         }
+        materialsPasswordEntered = memory.bool(forKey: "materialsPasswordEntered")
         
         // get current date
         let date = NSDate()
@@ -168,6 +170,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         cell.backgroundColor = colorForIndex((indexPath as NSIndexPath).row)
     }
 
+    // ---------------------------------- Presenting Alerts to User ---------------------------------- //
+    
     // view controller presenting alerts
     func presentAlert(_ taskName : String) {
         // cases for logging minutes
@@ -183,15 +187,23 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                     let textField = temp
                     let userInputAsInt = Int(textField.text!)
                     if (userInputAsInt != nil){
-                        self.logActivity(tName: taskName, time: userInputAsInt!)
-                        // add checkmark
-                        switch taskName {
-                            case "Yoga Based Movement": self.addCheckmark(row: 0)
-                            case "Breathing": self.addCheckmark(row: 1)
-                            case "Meditation": self.addCheckmark(row: 2)
-                            default: break
+                        if (userInputAsInt! >= 1 && userInputAsInt! <= 120) {
+                            self.logActivity(tName: taskName, time: userInputAsInt!)
+                            // add checkmark
+                            switch taskName {
+                                case "Yoga Based Movement": self.addCheckmark(row: 0)
+                                case "Breathing": self.addCheckmark(row: 1)
+                                case "Meditation": self.addCheckmark(row: 2)
+                                default: break
+                            }
+                        }
+                        else {
+                            self.presentInvalidInputAlert(name: taskName)
                         }
                         
+                    }
+                    else {
+                        self.presentInvalidInputAlert(name: taskName)
                     }
                 }
                 }
@@ -201,11 +213,37 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         }
         // case for Materials
         else if taskName == "Materials" {
-            let alertController = UIAlertController(title: taskName, message:
-                "Visit materials page?", preferredStyle: UIAlertControllerStyle.alert)
-            alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default,handler: nil))
-            alertController.addAction(UIAlertAction(title: "Go", style: UIAlertActionStyle.default,handler: goToMaterials))
-             self.present(alertController, animated: true, completion: nil)
+            
+            // check if user has entered password before or just entered pword for first time
+            if self.materialsPasswordEntered {
+                let alertController = UIAlertController(title: taskName, message:
+                    "Visit materials page?", preferredStyle: UIAlertControllerStyle.alert)
+                alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default,handler: nil))
+                alertController.addAction(UIAlertAction(title: "Go", style: UIAlertActionStyle.default,handler: self.goToMaterials))
+                self.present(alertController, animated: true, completion: nil)
+            }
+            // user has not accessed materials before
+            else {
+                let alertController = UIAlertController(title: taskName, message:
+                    "Enter Passcode:", preferredStyle: UIAlertControllerStyle.alert)
+                alertController.addTextField { (textField) in
+                    textField.placeholder = "Password"
+                    textField.isSecureTextEntry = false
+                }
+                alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default,handler: nil))
+                alertController.addAction(UIAlertAction(title: "Submit", style: UIAlertActionStyle.default,handler: { (_) in
+                    // password validation for materials : ONLY OCCURS FIRST TIME USER USES APP
+                    let textField = alertController.textFields![0]
+                    if textField.text == "taratrackermaterials_" {
+                        self.presentMaterialsAlert()
+                    }
+                    else {
+                        self.presentWrongPasswordAlert(name: taskName)
+                    }
+                }))
+                self.present(alertController, animated: true, completion: nil)
+            }
+            
         }
         // case for Submit Minutes
         else {
@@ -217,11 +255,14 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             }
             alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default,handler: nil))
             alertController.addAction(UIAlertAction(title: "Submit", style: UIAlertActionStyle.default,handler: { (_) in
-                    // password validation
-                    let textField = alertController.textFields![0]
-                    if textField.text == "taratracker" {
-                        self.sendData()
-                    }
+                // password validation for submitting materials
+                let textField = alertController.textFields![0]
+                if textField.text == "taratrackersubmit_" {
+                    self.sendData()
+                }
+                else {
+                    self.presentWrongPasswordAlert(name: taskName)
+                }
             }))
             self.present(alertController, animated: true, completion: nil)
         }
@@ -333,6 +374,29 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         controller.dismiss(animated: true, completion: nil)
+    }
+    
+    // alerts
+    func presentMaterialsAlert() {
+        self.memory.set(true, forKey: "materialsPasswordEntered")
+        self.materialsPasswordEntered = true
+        let alertController = UIAlertController(title: "Materials", message:
+            "Visit materials page?", preferredStyle: UIAlertControllerStyle.alert)
+        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default,handler: nil))
+        alertController.addAction(UIAlertAction(title: "Go", style: UIAlertActionStyle.default,handler: self.goToMaterials))
+        self.present(alertController, animated: true, completion: nil)
+    }
+    func presentWrongPasswordAlert(name : String) {
+        let alertController = UIAlertController(title: name, message:
+            "You entered an incorrect password.", preferredStyle: UIAlertControllerStyle.alert)
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default,handler: nil))
+        self.present(alertController, animated: true, completion: nil)
+    }
+    func presentInvalidInputAlert(name : String) {
+        let alertController = UIAlertController(title: name, message:
+            "Oops! You may only enter times between 1-120 minutes.", preferredStyle: UIAlertControllerStyle.alert)
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default,handler: nil))
+        self.present(alertController, animated: true, completion: nil)
     }
     
     // for performance/efficiency

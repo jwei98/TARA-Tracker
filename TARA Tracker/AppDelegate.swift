@@ -17,9 +17,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        
+        let notificationSettings = UIUserNotificationSettings(types: [.alert, .sound], categories: nil)
+        UIApplication.shared.registerUserNotificationSettings(notificationSettings)
+        self.createLocalNotification()
         return true
     }
+    
+    func createLocalNotification() {
+        
+        let dateComp:NSDateComponents = NSDateComponents()
+        dateComp.year = 2016;
+        dateComp.month = 06;
+        dateComp.day = 25;
+        dateComp.hour = 23;
+        dateComp.minute = 00;
+        dateComp.timeZone = NSTimeZone.system
+        let calender:NSCalendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
+        let date:NSDate = calender.date(from: dateComp as DateComponents)! as NSDate
+        
+        let localNotification = UILocalNotification()
+        localNotification.fireDate = date as Date
+        localNotification.soundName = UILocalNotificationDefaultSoundName
+        localNotification.alertBody = "Remember to complete your practices! Every minute counts :)"
+        localNotification.repeatInterval = NSCalendar.Unit.day
+        UIApplication.shared.scheduleLocalNotification(localNotification)
+    }
+    
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

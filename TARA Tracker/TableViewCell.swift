@@ -61,7 +61,7 @@ class TableViewCell: UITableViewCell {
             // has the user dragged the item far enough to initiate a delete/complete?
             deleteOnDragRelease = frame.origin.x < -frame.size.width / 3.0
             if deleteOnDragRelease {
-                let greenColor = UIColor(red: 0.4, green: 1.0, blue: 0.4, alpha: 0.7)
+                let greenColor = UIColor(red: 0.4, green: 1.0, blue: 0.4, alpha: 0.8)
                 delegate!.turnBackgroundColor(greenColor)
             }
             else {
@@ -109,11 +109,8 @@ class TableViewCell: UITableViewCell {
         // add totalMinute numers to background
         let xPos = -self.frame.width / 6
         let yPos = self.frame.height / 2
-        print(xPos)
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.width / 6, height: self.frame.height))
-        print(self.frame.width / 6)
-        label.font = UIFont(name: "Ailerons-Regular", size: self.frame.height/6)
-        print(self.frame.height/8)
+        label.font = UIFont(name: "Ailerons-Regular", size: self.frame.height/8)
         label.tag = 1
         label.center = CGPoint(x: xPos, y: yPos)
         label.text = txt
@@ -132,13 +129,10 @@ class TableViewCell: UITableViewCell {
         }
         
         // add totalMinute numers to background
-        let xPos = self.frame.width * (9/7)
+        let xPos = self.frame.width * (11/9)
         let yPos = self.frame.height * (1/2)
-        print(xPos)
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.width / 6, height: self.frame.height))
-        print(self.frame.width / 6)
-        label.font = UIFont(name: "Ailerons-Regular", size: self.frame.height/6)
-        print(self.frame.height/8)
+        label.font = UIFont(name: "Ailerons-Regular", size: self.frame.height/8)
         label.tag = 2
         label.center = CGPoint(x: xPos, y: yPos)
         label.text = txt
