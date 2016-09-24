@@ -129,8 +129,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell",
                                                                for: indexPath) as! TableViewCell
         let item = toDoItems[(indexPath as NSIndexPath).row]
-        cell.textLabel?.text = item.text
-        cell.textLabel?.font = UIFont(name: "Ailerons-Regular", size: tableView.rowHeight/5.1)
+        cell.textLabel?.text = item.text.uppercased()
+        cell.textLabel?.font = UIFont(name: "aliensandcows", size: tableView.rowHeight/3.75)
         cell.textLabel?.textColor = UIColor.white
         cell.selectionStyle = .none
         
@@ -219,7 +219,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 let alertController = UIAlertController(title: taskName, message:
                     "Visit materials page?", preferredStyle: UIAlertControllerStyle.alert)
                 alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default,handler: nil))
-                alertController.addAction(UIAlertAction(title: "Go", style: UIAlertActionStyle.default,handler: self.goToMaterials))
+                alertController.addAction(UIAlertAction(title: "Visit", style: UIAlertActionStyle.default,handler: self.goToMaterials))
                 self.present(alertController, animated: true, completion: nil)
             }
             // user has not accessed materials before

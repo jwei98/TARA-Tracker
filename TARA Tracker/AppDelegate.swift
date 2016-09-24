@@ -24,12 +24,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func createLocalNotification() {
-        
         let dateComp:NSDateComponents = NSDateComponents()
         dateComp.year = 2016;
         dateComp.month = 06;
         dateComp.day = 25;
-        dateComp.hour = 23;
+        dateComp.hour = 19;
         dateComp.minute = 00;
         dateComp.timeZone = NSTimeZone.system
         let calender:NSCalendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!

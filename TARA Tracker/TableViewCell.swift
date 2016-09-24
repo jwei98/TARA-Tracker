@@ -105,34 +105,30 @@ class TableViewCell: UITableViewCell {
             let label = checkLabel as! UILabel
             label.text = txt
         }
-        
-        // add totalMinute numers to background
-        let xPos = -self.frame.width / 6
-        let yPos = self.frame.height / 2
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.width / 6, height: self.frame.height))
-        label.font = UIFont(name: "Ailerons-Regular", size: self.frame.height/8)
-        label.tag = 1
-        label.center = CGPoint(x: xPos, y: yPos)
-        label.text = txt
-        label.textColor = UIColor.white
-        
-        self.addSubview(label)
+        else {
+            // add totalMinute numers to left side of cells
+            let xPos = -self.frame.width / 6
+            let yPos = self.frame.height / 2
+            let label = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.width / 6, height: self.frame.height))
+            label.font = UIFont(name: "SteelfishRg-Regular", size: self.frame.height/6)
+            label.tag = 1
+            label.center = CGPoint(x: xPos, y: yPos)
+            label.text = txt
+            label.textColor = UIColor.white
+            
+            self.addSubview(label)
+        }
         
     }
     
     
     func addActionLabel(txt: String) {
         
-        if let checkLabel = self.viewWithTag(2) {
-            let label = checkLabel as! UILabel
-            label.text = txt
-        }
-        
-        // add totalMinute numers to background
+        // add action labels on right end of cells
         let xPos = self.frame.width * (11/9)
         let yPos = self.frame.height * (1/2)
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.width / 6, height: self.frame.height))
-        label.font = UIFont(name: "Ailerons-Regular", size: self.frame.height/8)
+        label.font = UIFont(name: "aliensandcows", size: self.frame.height/6)
         label.tag = 2
         label.center = CGPoint(x: xPos, y: yPos)
         label.text = txt
