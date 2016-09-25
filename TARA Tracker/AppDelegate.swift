@@ -16,6 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        UIApplication.shared.cancelAllLocalNotifications()
         // Implement local notifications that repeat at 7 PM every day
         let notificationSettings = UIUserNotificationSettings(types: [.alert, .sound], categories: nil)
         UIApplication.shared.registerUserNotificationSettings(notificationSettings)
@@ -26,20 +27,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // creation of local notification
     func createLocalNotification() {
         let dateComp:NSDateComponents = NSDateComponents()
-        dateComp.year = 2016;
-        dateComp.month = 06;
-        dateComp.day = 25;
         dateComp.hour = 19;
         dateComp.minute = 00;
-        dateComp.timeZone = NSTimeZone.system
+        dateComp.timeZone = NSTimeZone.default
         let calender:NSCalendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
         let date:NSDate = calender.date(from: dateComp as DateComponents)! as NSDate
         
         let localNotification = UILocalNotification()
+        localNotification.alertTitle = "Remember to complete your practices!"
+        localNotification.alertBody = "Every minute counts :)"
+        localNotification.repeatInterval = NSCalendar.Unit.day
         localNotification.fireDate = date as Date
         localNotification.soundName = UILocalNotificationDefaultSoundName
-        localNotification.alertBody = "Remember to complete your practices! Every minute counts :)"
-        localNotification.repeatInterval = NSCalendar.Unit.day
+        
         UIApplication.shared.scheduleLocalNotification(localNotification)
     }
     
