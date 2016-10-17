@@ -47,6 +47,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         // LOADING PAST DATA
         previousMonth = memory.integer(forKey: "previousMonth")
         previousDate = memory.integer(forKey: "previousDate")
+
         // get stored minutesLog
         if let temp = memory.array(forKey: "minutesLog") as? [Int] {
             minutesLog = temp
@@ -127,7 +128,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         if indexPath.row < 3 {
             cell.addTotalMinutesLabel(txt: String(totalMinutesLog[indexPath.row]))
         }
-        
         cell.addActionLabel(txt: self.listActionNames[indexPath.row])
         
         return cell
@@ -250,7 +250,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 // password validation for submitting materials
                 let textField = alertController.textFields![0]
                 if textField.text == "taratrackersubmit_" {
-                    self.sendData()
+                    self.presentSubjectNumberAlert()
                 }
                 else {
                     self.presentWrongPasswordAlert(name: taskName)
@@ -283,6 +283,34 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default,handler: nil))
         self.present(alertController, animated: true, completion: nil)
     }
+    func presentInvalidSubNumber() {
+        let alertController = UIAlertController(title: "Invalid Subject ID Number", message:
+            "Sorry! You entered an invalid subject ID number!", preferredStyle: UIAlertControllerStyle.alert)
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default,handler: nil))
+        self.present(alertController, animated: true, completion: nil)
+    }
+    func presentSubjectNumberAlert() {
+        let alertController = UIAlertController(title: "Subject ID Number", message:
+            "Please enter your subject ID number:", preferredStyle: UIAlertControllerStyle.alert)
+        alertController.addTextField { (textField: UITextField!) in
+            textField.keyboardType = UIKeyboardType.numberPad
+        }
+        alertController.addAction(UIAlertAction(title: "Enter", style: UIAlertActionStyle.default,handler: { (_) in
+            if let temp = alertController.textFields?[0] {
+                let textField = temp
+                let userInput = String(textField.text!)
+                if (userInput != "" && Int(userInput!) != nil && Int(userInput!) != 0){
+                    self.sendData(subjectNumber: userInput!)
+                }
+                else {
+                    self.presentInvalidSubNumber()
+                }
+            }
+            }
+        ))
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
     
     // MARK: ---------------------------------- Alert Handlers & Logging Activities ---------------------------------- //
     
@@ -359,8 +387,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     // MARK: ---------------------------------- Submitting Data through Email ---------------------------------- //
 
     // sending email with data
-    func sendData() {
-        let mailComposeViewController = configuredMailComposeViewController()
+    func sendData(subjectNumber : String) {
+        let mailComposeViewController = configuredMailComposeViewController(subjectNumber: subjectNumber)
         if MFMailComposeViewController.canSendMail() {
             self.present(mailComposeViewController, animated: true, completion: nil)
         } else {
@@ -368,14 +396,36 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         }
     }
     
-    func configuredMailComposeViewController() -> MFMailComposeViewController {
+    func configuredMailComposeViewController(subjectNumber : String) -> MFMailComposeViewController {
+        
+        // name CSV file and add as attachment to email
+        let firstPartName = "taratracker_bc" + String(subjectNumber) + "_"
+        let secondPartName = String(currentMonth) + "_" + String(currentDate) + ".csv"
+        let fullFileName = firstPartName + secondPartName
+        
+        // create mail composer view
         let mailComposerVC = MFMailComposeViewController()
         mailComposerVC.mailComposeDelegate = self // Extremely important to set the --mailComposeDelegate-- property, NOT the --delegate-- property
-        
+
         mailComposerVC.setToRecipients(["Olga.Tymofiyeva@ucsf.edu"])
-        mailComposerVC.setSubject("TARA Minutes: Subject X")
-        let minutesString = String(describing: minutesLog)
+        mailComposerVC.setSubject(fullFileName)
+        var minutesString = String(describing: minutesLog)
+        // remove brackets
+        minutesString.remove(at: minutesString.index(before: minutesString.endIndex))
+        print("end index removed")
+        minutesString.remove(at: minutesString.startIndex)
+
         mailComposerVC.setMessageBody(minutesString, isHTML: false)
+        
+        // Create CSV file
+        let mailString = NSMutableString()
+        mailString.append(minutesString)
+        let data = mailString.data(using: String.Encoding.utf8.rawValue, allowLossyConversion: false)
+        if let content = data {
+            print("NSData: \(content)")
+        }
+        
+        mailComposerVC.addAttachmentData(data!, mimeType: "text/csv", fileName: fullFileName)
         
         return mailComposerVC
     }
